@@ -1,0 +1,19 @@
+body{
+padding-bottom: 40px;
+}
+#pervii {
+    color: darkblue;
+}
+#vtorii {
+    color: red;
+}  
+.pervii {
+    border: 18px dotted black;
+    color: green;
+    padding: 10px 20px 30px 40px;
+} 
+.qw {
+     padding: 10px 10px 10px 10px;
+     border: 1px solid black;
+     margin: 20px 0px 40px 0px;
+}
