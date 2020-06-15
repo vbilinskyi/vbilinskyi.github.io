@@ -30,6 +30,13 @@ if (num1 == str1) {
     console.log('num1 and str1 pretty the same');   
 }
 
+let sum = 0;
 
+// Если сумма не равна нулю
+if (sum !== 0) {
+    console.log('Sum is not 0');
+} else {
+    console.log('Sum is 0');
+}
 
 
