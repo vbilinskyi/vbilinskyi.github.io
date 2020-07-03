@@ -1,17 +1,349 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="./style.css">
-  </head>
-  <body>
-    <h1>Мой сайт</h1>
-    <section>
-      <label for="name">Имя пользователя</label>
-      <input id="name"/>
-      <button onclick="sayHello()">Жми</button>
-    </section>
+<head>
+	<style>
+		#wrap {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		#app {
+			width: 1024px;
+			margin: 120px auto;
+			cursor: all-scroll;
+			border: 1px solid;
+			position: relative;
+		}
+		#room {
+			display: block;
+			margin: 0 auto;
+		}
 
-    <script src="hello.js"></script>
-  </body>
+		#scale-buttons {
+			width: 30px;
+			height: 70px;
+			position: absolute;
+			top: 50%;
+			left: 0;
+			margin-top: -35px;
+			border: 1px solid;
+		}
+
+		#scale-buttons button {
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+			position: absolute;
+			left: 0;
+			z-index: 12;
+		}
+
+		#zoom-in {
+			top: 0;
+		}
+
+		#zoom-out {
+			bottom: 0;
+		}
+		.test {
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+<div id="wrap">
+	<div id="app">
+		<svg id="room" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+				 preserveAspectRatio="xMidYMid meet" viewBox="0 0 740 480" width="360" height="240">
+			<defs>
+				<path
+					d="M24.69 252.32C21.06 252.32 18.12 255.26 18.12 258.89C18.12 295.58 18.12 399.06 18.12 435.75C18.12 439.38 21.06 442.32 24.69 442.32C47.37 442.32 108.86 442.32 131.54 442.32C135.17 442.32 138.12 439.38 138.12 435.75C138.12 399.06 138.12 295.58 138.12 258.89C138.12 255.26 135.17 252.32 131.54 252.32C108.86 252.32 47.37 252.32 24.69 252.32Z"
+					id="f2oLjQIHWn"></path>
+				<path
+					d="M173.21 252.32C169.58 252.32 166.63 255.26 166.63 258.89C166.63 295.58 166.63 399.06 166.63 435.75C166.63 439.38 169.58 442.32 173.21 442.32C195.89 442.32 257.38 442.32 280.06 442.32C283.69 442.32 286.63 439.38 286.63 435.75C286.63 399.06 286.63 295.58 286.63 258.89C286.63 255.26 283.69 252.32 280.06 252.32C257.38 252.32 195.89 252.32 173.21 252.32Z"
+					id="azGlqVqhm"></path>
+				<path
+					d="M316.57 252.32C312.94 252.32 310 255.26 310 258.89C310 295.58 310 399.06 310 435.75C310 439.38 312.94 442.32 316.57 442.32C339.26 442.32 400.74 442.32 423.43 442.32C427.06 442.32 430 439.38 430 435.75C430 399.06 430 295.58 430 258.89C430 255.26 427.06 252.32 423.43 252.32C400.74 252.32 339.26 252.32 316.57 252.32Z"
+					id="bG76HaSrX"></path>
+				<path
+					d="M173.21 14.42C169.58 14.42 166.63 17.36 166.63 20.99C166.63 57.68 166.63 161.16 166.63 197.85C166.63 201.48 169.58 204.42 173.21 204.42C195.89 204.42 257.38 204.42 280.06 204.42C283.69 204.42 286.63 201.48 286.63 197.85C286.63 161.16 286.63 57.68 286.63 20.99C286.63 17.36 283.69 14.42 280.06 14.42C257.38 14.42 195.89 14.42 173.21 14.42Z"
+					id="bDFSmaAS2"></path>
+				<path
+					d="M316.57 14.42C312.94 14.42 310 17.36 310 20.99C310 57.68 310 161.16 310 197.85C310 201.48 312.94 204.42 316.57 204.42C339.26 204.42 400.74 204.42 423.43 204.42C427.06 204.42 430 201.48 430 197.85C430 161.16 430 57.68 430 20.99C430 17.36 427.06 14.42 423.43 14.42C400.74 14.42 339.26 14.42 316.57 14.42Z"
+					id="b822W68mv"></path>
+				<path
+					d="M462.93 14.42C459.31 14.42 456.36 17.36 456.36 20.99C456.36 57.68 456.36 161.16 456.36 197.85C456.36 201.48 459.31 204.42 462.93 204.42C485.62 204.42 547.11 204.42 569.79 204.42C573.42 204.42 576.36 201.48 576.36 197.85C576.36 161.16 576.36 57.68 576.36 20.99C576.36 17.36 573.42 14.42 569.79 14.42C547.11 14.42 485.62 14.42 462.93 14.42Z"
+					id="bA1E9ZuwG"></path>
+				<path
+					d="M501.88 399.12C501.88 402.75 504.82 405.69 508.45 405.69C545.14 405.69 648.62 405.69 685.31 405.69C688.94 405.69 691.88 402.75 691.88 399.12C691.88 376.43 691.88 314.95 691.88 292.26C691.88 288.63 688.94 285.69 685.31 285.69C648.62 285.69 545.14 285.69 508.45 285.69C504.82 285.69 501.88 288.63 501.88 292.26C501.88 314.95 501.88 376.43 501.88 399.12Z"
+					id="j2CZrTOKk1"></path>
+				<path
+					d="M603.45 14.42C599.82 14.42 596.88 17.36 596.88 20.99C596.88 57.68 596.88 161.16 596.88 197.85C596.88 201.48 599.82 204.42 603.45 204.42C626.14 204.42 687.62 204.42 710.31 204.42C713.94 204.42 716.88 201.48 716.88 197.85C716.88 161.16 716.88 57.68 716.88 20.99C716.88 17.36 713.94 14.42 710.31 14.42C687.62 14.42 626.14 14.42 603.45 14.42Z"
+					id="auDvolD99"></path>
+			</defs>
+			<g id="main-g">
+				<g>
+					<g>
+						<g>
+							<filter id="shadow10807744" x="-1.88" y="232.32" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M24.69 252.32C21.06 252.32 18.12 255.26 18.12 258.89C18.12 295.58 18.12 399.06 18.12 435.75C18.12 439.38 21.06 442.32 24.69 442.32C47.37 442.32 108.86 442.32 131.54 442.32C135.17 442.32 138.12 439.38 138.12 435.75C138.12 399.06 138.12 295.58 138.12 258.89C138.12 255.26 135.17 252.32 131.54 252.32C108.86 252.32 47.37 252.32 24.69 252.32Z"
+								id="a1rRmQyqD" fill="white" fill-opacity="1" filter="url(#shadow10807744)"></path>
+						</g>
+						<use xlink:href="#f2oLjQIHWn" opacity="1" fill="#46a07e" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#f2oLjQIHWn" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow11575508" x="146.63" y="232.32" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M173.21 252.32C169.58 252.32 166.63 255.26 166.63 258.89C166.63 295.58 166.63 399.06 166.63 435.75C166.63 439.38 169.58 442.32 173.21 442.32C195.89 442.32 257.38 442.32 280.06 442.32C283.69 442.32 286.63 439.38 286.63 435.75C286.63 399.06 286.63 295.58 286.63 258.89C286.63 255.26 283.69 252.32 280.06 252.32C257.38 252.32 195.89 252.32 173.21 252.32Z"
+								id="bgWGuJEkp" fill="white" fill-opacity="1" filter="url(#shadow11575508)"></path>
+						</g>
+						<use xlink:href="#azGlqVqhm" opacity="1" fill="#46a07e" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#azGlqVqhm" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow5551250" x="290" y="232.32" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M316.57 252.32C312.94 252.32 310 255.26 310 258.89C310 295.58 310 399.06 310 435.75C310 439.38 312.94 442.32 316.57 442.32C339.26 442.32 400.74 442.32 423.43 442.32C427.06 442.32 430 439.38 430 435.75C430 399.06 430 295.58 430 258.89C430 255.26 427.06 252.32 423.43 252.32C400.74 252.32 339.26 252.32 316.57 252.32Z"
+								id="a4wKQ1MhYj" fill="white" fill-opacity="1" filter="url(#shadow5551250)"></path>
+						</g>
+						<use xlink:href="#bG76HaSrX" opacity="1" fill="#46a07e" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#bG76HaSrX" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow3678734" x="146.63" y="-5.58" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M173.21 14.42C169.58 14.42 166.63 17.36 166.63 20.99C166.63 57.68 166.63 161.16 166.63 197.85C166.63 201.48 169.58 204.42 173.21 204.42C195.89 204.42 257.38 204.42 280.06 204.42C283.69 204.42 286.63 201.48 286.63 197.85C286.63 161.16 286.63 57.68 286.63 20.99C286.63 17.36 283.69 14.42 280.06 14.42C257.38 14.42 195.89 14.42 173.21 14.42Z"
+								id="fr2lcY3Mx" fill="white" fill-opacity="1" filter="url(#shadow3678734)"></path>
+						</g>
+						<use xlink:href="#bDFSmaAS2" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#bDFSmaAS2" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow14469230" x="290" y="-5.58" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M316.57 14.42C312.94 14.42 310 17.36 310 20.99C310 57.68 310 161.16 310 197.85C310 201.48 312.94 204.42 316.57 204.42C339.26 204.42 400.74 204.42 423.43 204.42C427.06 204.42 430 201.48 430 197.85C430 161.16 430 57.68 430 20.99C430 17.36 427.06 14.42 423.43 14.42C400.74 14.42 339.26 14.42 316.57 14.42Z"
+								id="d38y4Vlunz" fill="white" fill-opacity="1" filter="url(#shadow14469230)"></path>
+						</g>
+						<use xlink:href="#b822W68mv" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#b822W68mv" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow7485113" x="436.36" y="-5.58" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M462.93 14.42C459.31 14.42 456.36 17.36 456.36 20.99C456.36 57.68 456.36 161.16 456.36 197.85C456.36 201.48 459.31 204.42 462.93 204.42C485.62 204.42 547.11 204.42 569.79 204.42C573.42 204.42 576.36 201.48 576.36 197.85C576.36 161.16 576.36 57.68 576.36 20.99C576.36 17.36 573.42 14.42 569.79 14.42C547.11 14.42 485.62 14.42 462.93 14.42Z"
+								id="bMY9Oyia" fill="white" fill-opacity="1" filter="url(#shadow7485113)"></path>
+						</g>
+						<use xlink:href="#bA1E9ZuwG" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#bA1E9ZuwG" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g class="test" id="table-5">
+						<g>
+							<filter id="shadow2970215" x="481.88" y="265.69" width="233" height="164" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M501.88 399.12C501.88 402.75 504.82 405.69 508.45 405.69C545.14 405.69 648.62 405.69 685.31 405.69C688.94 405.69 691.88 402.75 691.88 399.12C691.88 376.43 691.88 314.95 691.88 292.26C691.88 288.63 688.94 285.69 685.31 285.69C648.62 285.69 545.14 285.69 508.45 285.69C504.82 285.69 501.88 288.63 501.88 292.26C501.88 314.95 501.88 376.43 501.88 399.12Z"
+								id="b1m8rHKQ1u" fill="white" fill-opacity="1" filter="url(#shadow2970215)"></path>
+						</g>
+						<use xlink:href="#j2CZrTOKk1" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#j2CZrTOKk1" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow5802467" x="576.88" y="-5.58" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path class="test"
+								d="M603.45 14.42C599.82 14.42 596.88 17.36 596.88 20.99C596.88 57.68 596.88 161.16 596.88 197.85C596.88 201.48 599.82 204.42 603.45 204.42C626.14 204.42 687.62 204.42 710.31 204.42C713.94 204.42 716.88 201.48 716.88 197.85C716.88 161.16 716.88 57.68 716.88 20.99C716.88 17.36 713.94 14.42 710.31 14.42C687.62 14.42 626.14 14.42 603.45 14.42Z"
+								id="bKYJZoMd" fill="white" fill-opacity="1" filter="url(#shadow5802467)"></path>
+						</g>
+						<use xlink:href="#auDvolD99" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#auDvolD99" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+				</g>
+			</g>
+		</svg>
+
+
+		<div id="scale-buttons">
+			<button id="zoom-in" onclick="zoom('in')">+</button>
+			<button id="zoom-out" onclick="zoom('out')">-</button>
+		</div>
+	</div>
+</div>
+<script>
+    const room = document.getElementById('room');
+    const app = document.getElementById('app');
+		const step = 0.1;
+		let scale = 1;
+    const debouncedScroll = debounce(doScroll, 40);
+
+    function debounce(f, ms) {
+
+        let isCooldown = false;
+
+        return function() {
+            if (isCooldown) return;
+
+            f.apply(this, arguments);
+
+            isCooldown = true;
+
+            setTimeout(() => isCooldown = false, ms);
+        };
+
+    }
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+
+    text.setAttribute('fill', '#fff');
+    text.setAttribute('font-size', '72');
+    text.setAttribute('id', 'svg-text');
+    text.textContent = '5';
+
+    const main = document.getElementById('table-5');
+    const size = main.getBoundingClientRect();
+    console.log(size)
+		const x = Math.ceil(size.x/2);
+		const y = Math.ceil(size.y/2);
+    text.setAttribute('x', x);
+    text.setAttribute('y', y);
+
+
+    // main.appendChild(text);
+
+    function zoom(direction) {
+				scale = direction === 'in' ? scale + step : scale - step;
+        scaleRoom(scale > 0.1 ? scale : step);
+    }
+
+    function scaleRoom(scale) {
+        console.log('zoom');
+        room.setAttribute("transform", `scale(${scale})`);
+    }
+
+    function doScroll(e) {
+        scale = e.deltaY > 0 ? scale + step : scale - step;
+        scaleRoom(scale > 0.1 ? scale : step);
+        e.preventDefault(); // disable the actual scrolling
+    }
+		const tables = document.querySelectorAll('.test');
+
+    tables.forEach(function(item) {
+       item.addEventListener('click', function(e) {
+           console.log(e.currentTarget.id);
+			 });
+		});
+
+    app.addEventListener("wheel", debouncedScroll, false);
+</script>
+</body>
 </html>
