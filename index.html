@@ -1,14 +1,20 @@
-<!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
 	<style>
+		html, body{
+			margin: 0;
+			padding: 0;
+		}
 		#wrap {
 			width: 100%;
 			height: 100%;
 			overflow: hidden;
 		}
 		#app {
-			width: 1024px;
+			max-width: 768px;
+			width: 100%;
 			margin: 120px auto;
 			cursor: all-scroll;
 			border: 1px solid;
@@ -52,9 +58,12 @@
 </head>
 <body>
 <div id="wrap">
+	<!--<div>
+		<img src="https://orion-sport.com.ua/wp-content/uploads/2018/10/Orion-logo_website_2x.png" alt="">
+	</div>-->
 	<div id="app">
 		<svg id="room" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-				 preserveAspectRatio="xMidYMid meet" viewBox="0 0 740 480" width="360" height="240">
+				 preserveAspectRatio="xMidYMid meet" viewBox="0 0 740 480" width="100%">
 			<defs>
 				<path
 					d="M24.69 252.32C21.06 252.32 18.12 255.26 18.12 258.89C18.12 295.58 18.12 399.06 18.12 435.75C18.12 439.38 21.06 442.32 24.69 442.32C47.37 442.32 108.86 442.32 131.54 442.32C135.17 442.32 138.12 439.38 138.12 435.75C138.12 399.06 138.12 295.58 138.12 258.89C138.12 255.26 135.17 252.32 131.54 252.32C108.86 252.32 47.37 252.32 24.69 252.32Z"
@@ -344,6 +353,15 @@
 		});
 
     app.addEventListener("wheel", debouncedScroll, false);
+    window.addEventListener("gesturechange", function (e) {
+        if (e.scale < 1.0) {
+            console.log('User moved fingers closer together');
+            // User moved fingers closer together
+        } else if (e.scale > 1.0) {
+            console.log('User moved fingers further apart');
+            // User moved fingers further apart
+        }
+    }, false);
 </script>
 </body>
 </html>
