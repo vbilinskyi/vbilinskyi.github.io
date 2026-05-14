@@ -1,0 +1,372 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<style>
+		html, body{
+			margin: 0;
+			padding: 0;
+		}
+		#wrap {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		#app {
+			max-width: 768px;
+			width: 100%;
+			margin: 120px auto;
+			cursor: all-scroll;
+			border: 1px solid;
+			position: relative;
+		}
+		#room {
+			display: block;
+			margin: 0 auto;
+		}
+
+		#scale-buttons {
+			width: 30px;
+			height: 70px;
+			position: absolute;
+			top: 50%;
+			left: 0;
+			margin-top: -35px;
+			border: 1px solid;
+		}
+
+		#scale-buttons button {
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+			position: absolute;
+			left: 0;
+			z-index: 12;
+		}
+
+		#zoom-in {
+			top: 0;
+		}
+
+		#zoom-out {
+			bottom: 0;
+		}
+		.test {
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <a href="javascript:(function()%7Bif%20(window.ListSearcherInjected)%20return%3B%0A%0Awindow.ListSearcherInjected%20%3D%20true%3B%0A%0A%2F%2F%20Create%20and%20style%20the%20search%20panel%0Aconst%20panel%20%3D%20document.createElement('div')%3B%0Apanel.id%20%3D%20'list-searcher-panel'%3B%0Apanel.style.cssText%20%3D%20%60%0A%20%20%20%20%20%20%20%20position%3A%20fixed%3B%0A%20%20%20%20%20%20%20%20top%3A%2020px%3B%0A%20%20%20%20%20%20%20%20right%3A%2020px%3B%0A%20%20%20%20%20%20%20%20width%3A%20300px%3B%0A%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%20%20%20%20background-color%3A%20%23f9f9f9%3B%0A%20%20%20%20%20%20%20%20border%3A%201px%20solid%20%23ccc%3B%0A%20%20%20%20%20%20%20%20border-radius%3A%205px%3B%0A%20%20%20%20%20%20%20%20box-shadow%3A%200%202px%208px%20rgba(0%2C0%2C0%2C0.2)%3B%0A%20%20%20%20%20%20%20%20z-index%3A%2010000%3B%0A%20%20%20%20%20%20%20%20font-family%3A%20Arial%2C%20sans-serif%3B%0A%20%20%20%20%20%20%20%20font-size%3A%2014px%3B%0A%20%20%20%20%60%3B%0A%0Apanel.innerHTML%20%3D%20%60%0A%20%20%20%20%20%20%20%20%3Cdiv%20style%3D%22display%3A%20flex%3B%20justify-content%3A%20space-between%3B%20align-items%3A%20center%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ch3%20style%3D%22margin%3A%200%3B%20font-size%3A%2016px%3B%22%3EList%20Searcher%3C%2Fh3%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20id%3D%22list-searcher-close%22%20style%3D%22background%3A%20none%3B%20border%3A%20none%3B%20font-size%3A%2016px%3B%20cursor%3A%20pointer%3B%22%3E%26times%3B%3C%2Fbutton%3E%0A%20%20%20%20%20%20%20%20%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%3Cinput%20type%3D%22text%22%20id%3D%22list-searcher-input%22%20placeholder%3D%22Enter%20list%20item%20(e.g.%2C%205.1)%22%20style%3D%22width%3A%20100%25%3B%20padding%3A%205px%3B%20margin-top%3A%2010px%3B%20box-sizing%3A%20border-box%3B%22%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%20style%3D%22margin-top%3A%2010px%3B%20display%3A%20flex%3B%20justify-content%3A%20space-between%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20id%3D%22list-searcher-prev%22%20disabled%3EPrevious%3C%2Fbutton%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20id%3D%22list-searcher-next%22%20disabled%3ENext%3C%2Fbutton%3E%0A%20%20%20%20%20%20%20%20%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%20id%3D%22list-searcher-info%22%20style%3D%22margin-top%3A%2010px%3B%22%3E%3C%2Fdiv%3E%0A%20%20%20%20%60%3B%0Adocument.body.appendChild(panel)%3B%0A%0A%2F%2F%20Inject%20highlight%20styles%0Aconst%20style%20%3D%20document.createElement('style')%3B%0Astyle.textContent%20%3D%20%60%0A%20%20%20%20%20%20%20%20.list-searcher-highlight%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20background-color%3A%20yellow%20!important%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20border%3A%202px%20solid%20red%20!important%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%60%3B%0Adocument.head.appendChild(style)%3B%0A%0A%2F%2F%20Variables%20and%20functions%0Alet%20currentMatches%20%3D%20%5B%5D%3B%0Alet%20currentMatchIndex%20%3D%20-1%3B%0A%0Afunction%20getListItemNumber(item)%20%7B%0A%20%20let%20numbers%20%3D%20%5B%5D%3B%0A%20%20let%20current%20%3D%20item%3B%0A%20%20while%20(current%20%26%26%20current.tagName%20%3D%3D%3D%20'LI')%20%7B%0A%20%20%20%20let%20parentOl%20%3D%20current.closest('ol')%3B%0A%20%20%20%20if%20(parentOl)%20%7B%0A%20%20%20%20%20%20let%20children%20%3D%20Array.from(parentOl.children)%3B%0A%20%20%20%20%20%20numbers.unshift(children.indexOf(current)%20%2B%201)%3B%0A%20%20%20%20%20%20current%20%3D%20parentOl.parentElement%3B%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20break%3B%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20return%20numbers.join('.')%3B%0A%7D%0A%0Afunction%20indexLists()%20%7B%0A%20%20let%20listItems%20%3D%20document.querySelectorAll('ol%20li')%3B%0A%20%20let%20index%20%3D%20%7B%7D%3B%0A%20%20listItems.forEach((item)%20%3D%3E%20%7B%0A%20%20%20%20let%20number%20%3D%20getListItemNumber(item)%3B%0A%20%20%20%20if%20(number)%20%7B%0A%20%20%20%20%20%20if%20(!index%5Bnumber%5D)%20index%5Bnumber%5D%20%3D%20%5B%5D%3B%0A%20%20%20%20%20%20index%5Bnumber%5D.push(item)%3B%0A%20%20%20%20%7D%0A%20%20%7D)%3B%0A%20%20return%20index%3B%0A%7D%0A%0Aasync%20function%20highlightAndScrollToMatch()%20%7B%0A%20%20document.querySelectorAll('.list-searcher-highlight').forEach(el%20%3D%3E%20el.classList.remove('list-searcher-highlight'))%3B%0A%20%20if%20(currentMatches%5BcurrentMatchIndex%5D)%20%7B%0A%20%20%20%20const%20targetElement%20%3D%20currentMatches%5BcurrentMatchIndex%5D%3B%0A%20%20%20%20targetElement.classList.add('list-searcher-highlight')%3B%0A%0A%20%20%20%20const%20rect%20%3D%20targetElement.getBoundingClientRect()%3B%0A%20%20%20%20const%20targetScrollPosition%20%3D%20window.pageYOffset%20%2B%20rect.top%20-%20100%3B%0A%0A%20%20%20%20return%20new%20Promise((resolve)%20%3D%3E%20%7B%0A%20%20%20%20%20%20window.scrollTo(%7B%0A%20%20%20%20%20%20%20%20top%3A%20targetScrollPosition%2C%0A%20%20%20%20%20%20%20%20behavior%3A%20'smooth'%0A%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%2F%2F%20Use%20requestAnimationFrame%20to%20check%20when%20scrolling%20has%20finished%0A%20%20%20%20%20%20function%20checkScrollEnd()%20%7B%0A%20%20%20%20%20%20%20%20const%20currentPosition%20%3D%20window.pageYOffset%3B%0A%20%20%20%20%20%20%20%20if%20(Math.abs(currentPosition%20-%20targetScrollPosition)%20%3C%202)%20%7B%0A%20%20%20%20%20%20%20%20%20%20resolve()%3B%0A%20%20%20%20%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%20%20%20%20requestAnimationFrame(checkScrollEnd)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20requestAnimationFrame(checkScrollEnd)%3B%0A%20%20%20%20%7D)%3B%0A%20%20%7D%0A%7D%0A%0Afunction%20updateUI()%20%7B%0A%20%20const%20info%20%3D%20document.getElementById('list-searcher-info')%3B%0A%20%20const%20prevBtn%20%3D%20document.getElementById('list-searcher-prev')%3B%0A%20%20const%20nextBtn%20%3D%20document.getElementById('list-searcher-next')%3B%0A%0A%20%20if%20(currentMatches.length%20%3E%200)%20%7B%0A%20%20%20%20info.textContent%20%3D%20%60Match%20%24%7BcurrentMatchIndex%20%2B%201%7D%20of%20%24%7BcurrentMatches.length%7D%60%3B%0A%20%20%20%20prevBtn.disabled%20%3D%20currentMatchIndex%20%3C%3D%200%3B%0A%20%20%20%20nextBtn.disabled%20%3D%20currentMatchIndex%20%3E%3D%20currentMatches.length%20-%201%3B%0A%20%20%7D%20else%20%7B%0A%20%20%20%20info.textContent%20%3D%20'No%20matches%20found'%3B%0A%20%20%20%20prevBtn.disabled%20%3D%20nextBtn.disabled%20%3D%20true%3B%0A%20%20%7D%0A%7D%0A%0Aconst%20listIndex%20%3D%20indexLists()%3B%0A%0A%2F%2F%20Helper%20function%20to%20debounce%20the%20search%0Afunction%20debounce(func%2C%20wait)%20%7B%0A%20%20let%20timeout%3B%0A%20%20return%20function%20executedFunction(...args)%20%7B%0A%20%20%20%20const%20later%20%3D%20()%20%3D%3E%20%7B%0A%20%20%20%20%20%20clearTimeout(timeout)%3B%0A%20%20%20%20%20%20func(...args)%3B%0A%20%20%20%20%7D%3B%0A%20%20%20%20clearTimeout(timeout)%3B%0A%20%20%20%20timeout%20%3D%20setTimeout(later%2C%20wait)%3B%0A%20%20%7D%3B%0A%7D%0A%0A%2F%2F%20Debounced%20search%20function%0Aconst%20debouncedSearch%20%3D%20debounce(async%20function(query)%20%7B%0A%20%20currentMatches%20%3D%20listIndex%5Bquery%5D%20%7C%7C%20%5B%5D%3B%0A%20%20currentMatchIndex%20%3D%20currentMatches.length%20%3E%200%20%3F%200%20%3A%20-1%3B%0A%20%20await%20highlightAndScrollToMatch()%3B%0A%20%20updateUI()%3B%0A%7D%2C%20300)%3B%0A%0A%2F%2F%20Update%20event%20listener%20to%20use%20debounced%20search%0Adocument.getElementById('list-searcher-input').addEventListener('input'%2C%20function()%20%7B%0A%20%20const%20query%20%3D%20this.value.trim()%3B%0A%20%20if%20(query)%20%7B%0A%20%20%20%20debouncedSearch(query)%3B%0A%20%20%7D%20else%20%7B%0A%20%20%20%20%2F%2F%20Clear%20highlights%20if%20the%20input%20is%20empty%0A%20%20%20%20document.querySelectorAll('.list-searcher-highlight').forEach(el%20%3D%3E%20el.classList.remove('list-searcher-highlight'))%3B%0A%20%20%20%20updateUI()%3B%0A%20%20%7D%0A%7D)%3B%0A%0A%2F%2F%20Update%20event%20listener%20for%20input%20to%20use%20async%2Fawait%0Adocument.getElementById('list-searcher-input').addEventListener('keyup'%2C%20async%20function%20(e)%20%7B%0A%20%20if%20(e.key%20%3D%3D%3D%20'Enter')%20%7B%0A%20%20%20%20const%20query%20%3D%20this.value.trim()%3B%0A%20%20%20%20currentMatches%20%3D%20listIndex%5Bquery%5D%20%7C%7C%20%5B%5D%3B%0A%20%20%20%20currentMatchIndex%20%3D%20currentMatches.length%20%3E%200%20%3F%200%20%3A%20-1%3B%0A%20%20%20%20await%20highlightAndScrollToMatch()%3B%0A%20%20%20%20updateUI()%3B%0A%20%20%7D%0A%7D)%3B%0A%0A%2F%2F%20Update%20the%20next%20and%20previous%20button%20event%20listeners%0Adocument.getElementById('list-searcher-prev').addEventListener('click'%2C%20async%20function%20()%20%7B%0A%20%20if%20(currentMatchIndex%20%3E%200)%20%7B%0A%20%20%20%20currentMatchIndex--%3B%0A%20%20%20%20await%20highlightAndScrollToMatch()%3B%0A%20%20%20%20updateUI()%3B%0A%20%20%7D%0A%7D)%3B%0A%0Adocument.getElementById('list-searcher-next').addEventListener('click'%2C%20async%20function%20()%20%7B%0A%20%20if%20(currentMatchIndex%20%3C%20currentMatches.length%20-%201)%20%7B%0A%20%20%20%20currentMatchIndex%2B%2B%3B%0A%20%20%20%20await%20highlightAndScrollToMatch()%3B%0A%20%20%20%20updateUI()%3B%0A%20%20%7D%0A%7D)%3B%0A%0Adocument.getElementById('list-searcher-close').addEventListener('click'%2C%20function%20()%20%7B%0A%20%20panel.remove()%3B%0A%20%20style.remove()%3B%0A%20%20window.ListSearcherInjected%20%3D%20false%3B%0A%7D)%3B%7D)()%3B">List Searcher</a>
+</div>
+
+<div style="display: none" id="wrap">
+	<!--<div>
+		<img src="https://orion-sport.com.ua/wp-content/uploads/2018/10/Orion-logo_website_2x.png" alt="">
+	</div>-->
+	<div id="app">
+		<svg id="room" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+				 preserveAspectRatio="xMidYMid meet" viewBox="0 0 740 480" width="100%">
+			<defs>
+				<path
+					d="M24.69 252.32C21.06 252.32 18.12 255.26 18.12 258.89C18.12 295.58 18.12 399.06 18.12 435.75C18.12 439.38 21.06 442.32 24.69 442.32C47.37 442.32 108.86 442.32 131.54 442.32C135.17 442.32 138.12 439.38 138.12 435.75C138.12 399.06 138.12 295.58 138.12 258.89C138.12 255.26 135.17 252.32 131.54 252.32C108.86 252.32 47.37 252.32 24.69 252.32Z"
+					id="f2oLjQIHWn"></path>
+				<path
+					d="M173.21 252.32C169.58 252.32 166.63 255.26 166.63 258.89C166.63 295.58 166.63 399.06 166.63 435.75C166.63 439.38 169.58 442.32 173.21 442.32C195.89 442.32 257.38 442.32 280.06 442.32C283.69 442.32 286.63 439.38 286.63 435.75C286.63 399.06 286.63 295.58 286.63 258.89C286.63 255.26 283.69 252.32 280.06 252.32C257.38 252.32 195.89 252.32 173.21 252.32Z"
+					id="azGlqVqhm"></path>
+				<path
+					d="M316.57 252.32C312.94 252.32 310 255.26 310 258.89C310 295.58 310 399.06 310 435.75C310 439.38 312.94 442.32 316.57 442.32C339.26 442.32 400.74 442.32 423.43 442.32C427.06 442.32 430 439.38 430 435.75C430 399.06 430 295.58 430 258.89C430 255.26 427.06 252.32 423.43 252.32C400.74 252.32 339.26 252.32 316.57 252.32Z"
+					id="bG76HaSrX"></path>
+				<path
+					d="M173.21 14.42C169.58 14.42 166.63 17.36 166.63 20.99C166.63 57.68 166.63 161.16 166.63 197.85C166.63 201.48 169.58 204.42 173.21 204.42C195.89 204.42 257.38 204.42 280.06 204.42C283.69 204.42 286.63 201.48 286.63 197.85C286.63 161.16 286.63 57.68 286.63 20.99C286.63 17.36 283.69 14.42 280.06 14.42C257.38 14.42 195.89 14.42 173.21 14.42Z"
+					id="bDFSmaAS2"></path>
+				<path
+					d="M316.57 14.42C312.94 14.42 310 17.36 310 20.99C310 57.68 310 161.16 310 197.85C310 201.48 312.94 204.42 316.57 204.42C339.26 204.42 400.74 204.42 423.43 204.42C427.06 204.42 430 201.48 430 197.85C430 161.16 430 57.68 430 20.99C430 17.36 427.06 14.42 423.43 14.42C400.74 14.42 339.26 14.42 316.57 14.42Z"
+					id="b822W68mv"></path>
+				<path
+					d="M462.93 14.42C459.31 14.42 456.36 17.36 456.36 20.99C456.36 57.68 456.36 161.16 456.36 197.85C456.36 201.48 459.31 204.42 462.93 204.42C485.62 204.42 547.11 204.42 569.79 204.42C573.42 204.42 576.36 201.48 576.36 197.85C576.36 161.16 576.36 57.68 576.36 20.99C576.36 17.36 573.42 14.42 569.79 14.42C547.11 14.42 485.62 14.42 462.93 14.42Z"
+					id="bA1E9ZuwG"></path>
+				<path
+					d="M501.88 399.12C501.88 402.75 504.82 405.69 508.45 405.69C545.14 405.69 648.62 405.69 685.31 405.69C688.94 405.69 691.88 402.75 691.88 399.12C691.88 376.43 691.88 314.95 691.88 292.26C691.88 288.63 688.94 285.69 685.31 285.69C648.62 285.69 545.14 285.69 508.45 285.69C504.82 285.69 501.88 288.63 501.88 292.26C501.88 314.95 501.88 376.43 501.88 399.12Z"
+					id="j2CZrTOKk1"></path>
+				<path
+					d="M603.45 14.42C599.82 14.42 596.88 17.36 596.88 20.99C596.88 57.68 596.88 161.16 596.88 197.85C596.88 201.48 599.82 204.42 603.45 204.42C626.14 204.42 687.62 204.42 710.31 204.42C713.94 204.42 716.88 201.48 716.88 197.85C716.88 161.16 716.88 57.68 716.88 20.99C716.88 17.36 713.94 14.42 710.31 14.42C687.62 14.42 626.14 14.42 603.45 14.42Z"
+					id="auDvolD99"></path>
+			</defs>
+			<g id="main-g">
+				<g>
+					<g>
+						<g>
+							<filter id="shadow10807744" x="-1.88" y="232.32" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M24.69 252.32C21.06 252.32 18.12 255.26 18.12 258.89C18.12 295.58 18.12 399.06 18.12 435.75C18.12 439.38 21.06 442.32 24.69 442.32C47.37 442.32 108.86 442.32 131.54 442.32C135.17 442.32 138.12 439.38 138.12 435.75C138.12 399.06 138.12 295.58 138.12 258.89C138.12 255.26 135.17 252.32 131.54 252.32C108.86 252.32 47.37 252.32 24.69 252.32Z"
+								id="a1rRmQyqD" fill="white" fill-opacity="1" filter="url(#shadow10807744)"></path>
+						</g>
+						<use xlink:href="#f2oLjQIHWn" opacity="1" fill="#46a07e" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#f2oLjQIHWn" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow11575508" x="146.63" y="232.32" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M173.21 252.32C169.58 252.32 166.63 255.26 166.63 258.89C166.63 295.58 166.63 399.06 166.63 435.75C166.63 439.38 169.58 442.32 173.21 442.32C195.89 442.32 257.38 442.32 280.06 442.32C283.69 442.32 286.63 439.38 286.63 435.75C286.63 399.06 286.63 295.58 286.63 258.89C286.63 255.26 283.69 252.32 280.06 252.32C257.38 252.32 195.89 252.32 173.21 252.32Z"
+								id="bgWGuJEkp" fill="white" fill-opacity="1" filter="url(#shadow11575508)"></path>
+						</g>
+						<use xlink:href="#azGlqVqhm" opacity="1" fill="#46a07e" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#azGlqVqhm" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow5551250" x="290" y="232.32" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M316.57 252.32C312.94 252.32 310 255.26 310 258.89C310 295.58 310 399.06 310 435.75C310 439.38 312.94 442.32 316.57 442.32C339.26 442.32 400.74 442.32 423.43 442.32C427.06 442.32 430 439.38 430 435.75C430 399.06 430 295.58 430 258.89C430 255.26 427.06 252.32 423.43 252.32C400.74 252.32 339.26 252.32 316.57 252.32Z"
+								id="a4wKQ1MhYj" fill="white" fill-opacity="1" filter="url(#shadow5551250)"></path>
+						</g>
+						<use xlink:href="#bG76HaSrX" opacity="1" fill="#46a07e" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#bG76HaSrX" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow3678734" x="146.63" y="-5.58" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M173.21 14.42C169.58 14.42 166.63 17.36 166.63 20.99C166.63 57.68 166.63 161.16 166.63 197.85C166.63 201.48 169.58 204.42 173.21 204.42C195.89 204.42 257.38 204.42 280.06 204.42C283.69 204.42 286.63 201.48 286.63 197.85C286.63 161.16 286.63 57.68 286.63 20.99C286.63 17.36 283.69 14.42 280.06 14.42C257.38 14.42 195.89 14.42 173.21 14.42Z"
+								id="fr2lcY3Mx" fill="white" fill-opacity="1" filter="url(#shadow3678734)"></path>
+						</g>
+						<use xlink:href="#bDFSmaAS2" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#bDFSmaAS2" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow14469230" x="290" y="-5.58" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M316.57 14.42C312.94 14.42 310 17.36 310 20.99C310 57.68 310 161.16 310 197.85C310 201.48 312.94 204.42 316.57 204.42C339.26 204.42 400.74 204.42 423.43 204.42C427.06 204.42 430 201.48 430 197.85C430 161.16 430 57.68 430 20.99C430 17.36 427.06 14.42 423.43 14.42C400.74 14.42 339.26 14.42 316.57 14.42Z"
+								id="d38y4Vlunz" fill="white" fill-opacity="1" filter="url(#shadow14469230)"></path>
+						</g>
+						<use xlink:href="#b822W68mv" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#b822W68mv" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow7485113" x="436.36" y="-5.58" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M462.93 14.42C459.31 14.42 456.36 17.36 456.36 20.99C456.36 57.68 456.36 161.16 456.36 197.85C456.36 201.48 459.31 204.42 462.93 204.42C485.62 204.42 547.11 204.42 569.79 204.42C573.42 204.42 576.36 201.48 576.36 197.85C576.36 161.16 576.36 57.68 576.36 20.99C576.36 17.36 573.42 14.42 569.79 14.42C547.11 14.42 485.62 14.42 462.93 14.42Z"
+								id="bMY9Oyia" fill="white" fill-opacity="1" filter="url(#shadow7485113)"></path>
+						</g>
+						<use xlink:href="#bA1E9ZuwG" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#bA1E9ZuwG" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g class="test" id="table-5">
+						<g>
+							<filter id="shadow2970215" x="481.88" y="265.69" width="233" height="164" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path
+								d="M501.88 399.12C501.88 402.75 504.82 405.69 508.45 405.69C545.14 405.69 648.62 405.69 685.31 405.69C688.94 405.69 691.88 402.75 691.88 399.12C691.88 376.43 691.88 314.95 691.88 292.26C691.88 288.63 688.94 285.69 685.31 285.69C648.62 285.69 545.14 285.69 508.45 285.69C504.82 285.69 501.88 288.63 501.88 292.26C501.88 314.95 501.88 376.43 501.88 399.12Z"
+								id="b1m8rHKQ1u" fill="white" fill-opacity="1" filter="url(#shadow2970215)"></path>
+						</g>
+						<use xlink:href="#j2CZrTOKk1" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#j2CZrTOKk1" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+					<g>
+						<g>
+							<filter id="shadow5802467" x="576.88" y="-5.58" width="163" height="234" filterUnits="userSpaceOnUse"
+											primitiveUnits="userSpaceOnUse">
+								<feFlood></feFlood>
+								<feComposite in2="SourceAlpha" operator="in"></feComposite>
+								<feGaussianBlur stdDeviation="2.24"></feGaussianBlur>
+								<feOffset dx="3" dy="4" result="afterOffset"></feOffset>
+								<feFlood flood-color="#000000" flood-opacity="0.5"></feFlood>
+								<feComposite in2="afterOffset" operator="in"></feComposite>
+								<feMorphology operator="dilate" radius="1"></feMorphology>
+								<feComposite in2="SourceAlpha" operator="out"></feComposite>
+							</filter>
+							<path class="test"
+								d="M603.45 14.42C599.82 14.42 596.88 17.36 596.88 20.99C596.88 57.68 596.88 161.16 596.88 197.85C596.88 201.48 599.82 204.42 603.45 204.42C626.14 204.42 687.62 204.42 710.31 204.42C713.94 204.42 716.88 201.48 716.88 197.85C716.88 161.16 716.88 57.68 716.88 20.99C716.88 17.36 713.94 14.42 710.31 14.42C687.62 14.42 626.14 14.42 603.45 14.42Z"
+								id="bKYJZoMd" fill="white" fill-opacity="1" filter="url(#shadow5802467)"></path>
+						</g>
+						<use xlink:href="#auDvolD99" opacity="1" fill="#2e3f73" fill-opacity="1"></use>
+						<g>
+							<use xlink:href="#auDvolD99" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="2"
+									 stroke-opacity="1"></use>
+						</g>
+					</g>
+				</g>
+			</g>
+		</svg>
+
+
+		<div id="scale-buttons">
+			<button id="zoom-in" onclick="zoom('in')">+</button>
+			<button id="zoom-out" onclick="zoom('out')">-</button>
+		</div>
+	</div>
+</div>
+<script>
+    const room = document.getElementById('room');
+    const app = document.getElementById('app');
+		const step = 0.1;
+		let scale = 1;
+    const debouncedScroll = debounce(doScroll, 40);
+
+    function debounce(f, ms) {
+
+        let isCooldown = false;
+
+        return function() {
+            if (isCooldown) return;
+
+            f.apply(this, arguments);
+
+            isCooldown = true;
+
+            setTimeout(() => isCooldown = false, ms);
+        };
+
+    }
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+
+    text.setAttribute('fill', '#fff');
+    text.setAttribute('font-size', '72');
+    text.setAttribute('id', 'svg-text');
+    text.textContent = '5';
+
+    const main = document.getElementById('table-5');
+    const size = main.getBoundingClientRect();
+    console.log(size)
+		const x = Math.ceil(size.x/2);
+		const y = Math.ceil(size.y/2);
+    text.setAttribute('x', x);
+    text.setAttribute('y', y);
+
+
+    // main.appendChild(text);
+
+    function zoom(direction) {
+				scale = direction === 'in' ? scale + step : scale - step;
+        scaleRoom(scale > 0.1 ? scale : step);
+    }
+
+    function scaleRoom(scale) {
+        console.log('zoom');
+        room.setAttribute("transform", `scale(${scale})`);
+    }
+
+    function doScroll(e) {
+        scale = e.deltaY > 0 ? scale + step : scale - step;
+        scaleRoom(scale > 0.1 ? scale : step);
+        e.preventDefault(); // disable the actual scrolling
+    }
+		const tables = document.querySelectorAll('.test');
+
+    tables.forEach(function(item) {
+       item.addEventListener('click', function(e) {
+           console.log(e.currentTarget.id);
+			 });
+		});
+
+    app.addEventListener("wheel", debouncedScroll, false);
+    window.addEventListener("gesturechange", function (e) {
+        if (e.scale < 1.0) {
+            console.log('User moved fingers closer together');
+            // User moved fingers closer together
+        } else if (e.scale > 1.0) {
+            console.log('User moved fingers further apart');
+            // User moved fingers further apart
+        }
+    }, false);
+</script>
+</body>
+</html>
